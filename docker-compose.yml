@@ -1,0 +1,23 @@
+version: "3"
+services:
+  sftp-server:
+    image: atmoz/sftp
+    container_name: sftp_server
+    restart: always
+    volumes:
+      - ./sftp_data:/home/user/upload
+    ports:
+      - "2222:22"
+    environment:
+      SFTP_USERS: user:pass:::upload
+
+  server-script:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: file_watcher
+    restart: always
+    volumes:
+      - ./sftp_data:/app/files
+    environment:
+      WATCH_FOLDER: /app/files
